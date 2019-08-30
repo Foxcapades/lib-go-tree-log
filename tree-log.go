@@ -15,24 +15,57 @@ const (
 	indDefChLen  = uint8(len(indDefCache)) / indDefInLen
 )
 
+// TreeLogger provides functions to print logs in a
+// hierarchical presentation to help provide clarity for
+// verbose processes.
 type TreeLogger interface {
+
 	IndentString(txt string) TreeLogger
 
+	// Increases the indentation for the logger.
+	//
+	// Each call of this will increase the indentation by 1
+	// copy of the IndentString value for following write
+	// calls.
 	Indent() TreeLogger
+
+	// Decreases the indentation for the logger.
+	//
+	// Each call of this will decrease the indentation by 1
+	// copy of the IndentString value for following write
+	// calls.
 	UnIndent() TreeLogger
 
+	// Sets the writer into which logs will be written.
+	//
+	// Default writer is os.Stdout.
 	Writer(out io.Writer) TreeLogger
 
+	// Writes the given values at the current indentation
+	// level to the log writer with no trailing newline.
 	Write(in ...interface{}) TreeLogger
+
+	// Writes the given values as a single line at the current
+	// indentation level to the log writer.
 	WriteLn(in ...interface{}) TreeLogger
 
-	WriteChild(in ...interface{}) TreeLogger
+	// Writes the given values as a single line at an
+	// increased indentation level to the log writer.
+	//
+	// Shortcut for calling Indent().WriteLn(...).UnIndent()
 	WriteChildLn(in ...interface{}) TreeLogger
 
+	// Directly appends the given values to the current log
+	// line without prepending the current indentation or
+	// appending a trailing newline
 	Append(in ...interface{}) TreeLogger
+
+	// Prints a newline character to the log writer
 	NewLine() TreeLogger
 }
 
+// NewTreeLogger creates a new default configured
+// implementation of TreeLogger.
 func NewTreeLogger() TreeLogger {
 	return &treeLogger{
 		indent:  indDefIndent,
@@ -47,22 +80,25 @@ func NewTreeLogger() TreeLogger {
 
 var defLogger = NewTreeLogger()
 
+// DefaultLogger returns the preconfigured default logger.
+//
+// All calls to this method will return the same TreeLogger
+// instance.
 func DefaultLogger() TreeLogger {
 	return defLogger
 }
 
 type treeLogger struct {
 	cache string
-	chLen uint8
+	indent string
 
 	current []interface{}
 
-	indent string
-	inLen  uint8
+	writer io.Writer
 
 	level uint8
-
-	writer io.Writer
+	chLen uint8
+	inLen uint8
 }
 
 func (t *treeLogger) Writer(out io.Writer) TreeLogger {
