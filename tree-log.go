@@ -11,10 +11,9 @@ import (
 const (
 	indDefIndent = "  "
 	indDefInLen  = uint8(len(indDefIndent))
-  indDefCache  = "                    "
-  indDefChLen  = uint8(len(indDefCache)) / indDefInLen
+	indDefCache  = "                    "
+	indDefChLen  = uint8(len(indDefCache)) / indDefInLen
 )
-
 
 type TreeLogger interface {
 	IndentString(txt string) TreeLogger
@@ -36,16 +35,15 @@ type TreeLogger interface {
 
 func NewTreeLogger() TreeLogger {
 	return &treeLogger{
-		indent: indDefIndent,
-		inLen:  indDefInLen,
-		cache: indDefCache,
-		chLen: indDefChLen,
-		level:  0,
-		writer: os.Stdout,
+		indent:  indDefIndent,
+		inLen:   indDefInLen,
+		cache:   indDefCache,
+		chLen:   indDefChLen,
+		level:   0,
+		writer:  os.Stdout,
 		current: []interface{}{""},
 	}
 }
-
 
 var defLogger = NewTreeLogger()
 
@@ -53,17 +51,16 @@ func DefaultLogger() TreeLogger {
 	return defLogger
 }
 
-
 type treeLogger struct {
-	cache  string
-	chLen  uint8
+	cache string
+	chLen uint8
 
 	current []interface{}
 
 	indent string
 	inLen  uint8
 
-	level  uint8
+	level uint8
 
 	writer io.Writer
 }
@@ -145,7 +142,6 @@ func forceWrite(w io.Writer, in []interface{}) {
 func forceWriteLn(w io.Writer, in []interface{}) {
 	forcePush(w, in, fmt.Fprintln)
 }
-
 
 type pusher func(io.Writer, ...interface{}) (int, error)
 
