@@ -1,1 +1,29 @@
-= lib-go-tree-log
+= Tree Shaped Logs
+
+Simple lib to print hierarchical logs.  Useful for simple
+scripts/cli tools that generate a lot of output.
+
+.Example Output
+[source]
+----
+Project:  ApiCommonModel
+  Fetching changes from SVN
+  Processing branches:
+    master
+      Checking out
+      Rebasing onto SVN remote branch
+      Pushing changes to github
+Project:  ApiCommonShared
+  Fetching changes from SVN
+  No new changes
+Project:  ApiCommonWebService
+  Fetching changes from SVN
+  No new changes
+Project:  ApiCommonWebsite
+  Fetching changes from SVN
+  Processing branches:
+    master
+      Checking out
+      Rebasing onto SVN remote branch
+      Failed to rebase branch
+----
